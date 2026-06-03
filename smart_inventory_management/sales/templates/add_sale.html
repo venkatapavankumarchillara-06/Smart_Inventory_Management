@@ -110,6 +110,15 @@
             background: rgba(255,255,255,0.9);
         }
 
+        input[readonly]{
+
+            background: rgba(255,255,255,0.7);
+
+            color:#0f172a;
+
+            font-weight:bold;
+        }
+
         input:focus,
         select:focus{
 
@@ -197,11 +206,11 @@
 
             <label>Select Product</label>
 
-            <select name="product_id" required>
+            <select name="product_id" id="product_id" required>
 
                 {% for product in products %}
 
-                    <option value="{{ product.id }}">{{ product.name }} (₹{{ product.price }} - {{ product.quantity }} in stock)</option>
+                    <option value="{{ product.id }}" data-price="{{ product.price }}">{{ product.name }} (Rs. {{ product.price }}/kg - {{ product.quantity }} kg in stock)</option>
 
                 {% empty %}
 
@@ -211,9 +220,13 @@
 
             </select>
 
-            <label>Quantity</label>
+            <label>Quantity (kg)</label>
 
-            <input type="number" name="quantity" placeholder="Enter Quantity" min="1" required>
+            <input type="number" name="quantity" id="quantity" placeholder="Enter Quantity in kg" min="0.01" step="0.01" required>
+
+            <label>Total Price (Rs.)</label>
+
+            <input type="text" id="total_price" value="Rs. 0.00" readonly>
 
             <label>Payment Method</label>
 
@@ -270,6 +283,25 @@
     </div>
 
     {% include 'popups.html' %}
+
+    <script>
+        const productSelect = document.getElementById('product_id');
+        const quantityInput = document.getElementById('quantity');
+        const totalPriceInput = document.getElementById('total_price');
+
+        function updateTotalPrice() {
+            const selectedOption = productSelect.options[productSelect.selectedIndex];
+            const price = parseFloat(selectedOption?.dataset.price || '0');
+            const quantity = parseFloat(quantityInput.value || '0');
+            const total = price * quantity;
+
+            totalPriceInput.value = `Rs. ${total.toFixed(2)}`;
+        }
+
+        productSelect.addEventListener('change', updateTotalPrice);
+        quantityInput.addEventListener('input', updateTotalPrice);
+        updateTotalPrice();
+    </script>
 
 </body>
 

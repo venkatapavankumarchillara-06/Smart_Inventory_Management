@@ -182,23 +182,23 @@
         <h2>Product Details</h2>
 
         <p>
-            <b>Product Name:</b> Laptop
+            <b>Product Name:</b> {{ product.name }}
         </p>
 
         <p>
-            <b>Category:</b> Electronics
+            <b>Category:</b> {{ product.category }}
         </p>
 
         <p>
-            <b>Price:</b> ₹50,000
+            <b>Price per kg:</b> Rs. {{ product.price }}
         </p>
 
         <p>
-            <b>Stock:</b> 10
+            <b>Stock:</b> {{ product.quantity }} kg
         </p>
 
         <p>
-            <b>Description:</b> High performance laptop
+            <b>Description:</b> {{ product.description }}
         </p>
 
         <a href="/products/" class="btn">

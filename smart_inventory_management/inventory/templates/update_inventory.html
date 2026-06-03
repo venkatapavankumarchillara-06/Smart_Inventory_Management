@@ -208,13 +208,13 @@
 
             <input type="text" value="{{ inventory.product.name }}" disabled style="background: rgba(255,255,255,0.2); color: #cbd5e1;">
 
-            <label>Current Stock Quantity</label>
+            <label>Current Stock Quantity (kg)</label>
 
-            <input type="number" name="stock" value="{{ inventory.stock }}" required placeholder="Enter Current Stock">
+            <input type="number" name="stock" value="{{ inventory.stock }}" step="0.01" min="0" required placeholder="Enter Current Stock in kg">
 
-            <label>Low Stock Threshold Limit</label>
+            <label>Low Stock Threshold Limit (kg)</label>
 
-            <input type="number" name="low_stock_threshold" value="{{ inventory.low_stock_threshold }}" required placeholder="Enter Low Stock Threshold">
+            <input type="number" name="low_stock_threshold" value="{{ inventory.low_stock_threshold }}" step="0.01" min="0" required placeholder="Enter Low Stock Threshold in kg">
 
             <button type="submit">
 

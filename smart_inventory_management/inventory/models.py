@@ -17,11 +17,13 @@ class Inventory(models.Model):
 
     # Available Stock
 
-    stock = models.IntegerField()
+    stock = models.DecimalField(max_digits=10, decimal_places=2)
 
     # Low Stock Alert Limit
 
-    low_stock_threshold = models.IntegerField(
+    low_stock_threshold = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
 
         default=5
 
@@ -48,7 +50,7 @@ class StockHistory(models.Model):
 
     action = models.CharField(max_length=50)  # e.g., 'Added', 'Updated', 'Sold', 'Returned'
 
-    quantity = models.IntegerField()  # e.g., +20, -5
+    quantity = models.DecimalField(max_digits=10, decimal_places=2)  # e.g., +20, -5
 
     status = models.CharField(max_length=50)  # e.g., 'In Stock', 'Low Stock', 'Out Of Stock'
 

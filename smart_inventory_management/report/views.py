@@ -1,12 +1,150 @@
 import datetime
+from decimal import Decimal
+from io import BytesIO
+
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.db.models import Sum, F
+from openpyxl import Workbook
+from openpyxl.styles import Alignment, Font, PatternFill
+
 from sales.models import Sale
 from inventory.models import Inventory
 from products.models import Product
 
+
+HEADER_FILL = PatternFill(
+    start_color="00BFFF",
+    end_color="00BFFF",
+    fill_type="solid"
+)
+
+HEADER_FONT = Font(
+    bold=True,
+    color="FFFFFF"
+)
+
+
+def _format_excel_sheet(worksheet):
+    for cell in worksheet[1]:
+        cell.fill = HEADER_FILL
+        cell.font = HEADER_FONT
+        cell.alignment = Alignment(horizontal="center")
+
+    for column_cells in worksheet.columns:
+        max_length = 0
+        column_letter = column_cells[0].column_letter
+
+        for cell in column_cells:
+            cell.alignment = Alignment(horizontal="center")
+            cell_value = "" if cell.value is None else str(cell.value)
+            max_length = max(max_length, len(cell_value))
+
+        worksheet.column_dimensions[column_letter].width = max_length + 4
+
+
+def _stock_status(inventory):
+    if inventory.stock == 0:
+        return "Out of Stock"
+
+    if inventory.stock <= inventory.low_stock_threshold:
+        return "Low Stock"
+
+    return "In Stock"
+
+
+def _decimal_to_float(value):
+    if isinstance(value, Decimal):
+        return float(value)
+
+    return value
+
+
 def reports_dashboard(request):
     return render(request, 'report_dashboard.html')
+
+
+def export_inventory_report(request):
+    workbook = Workbook()
+    worksheet = workbook.active
+    worksheet.title = "Inventory Report"
+
+    headers = [
+        "Product Name",
+        "Category",
+        "Quantity",
+        "Price",
+        "Supplier",
+        "Stock Status",
+    ]
+    worksheet.append(headers)
+
+    inventories = Inventory.objects.select_related("product").order_by("product__name")
+
+    for inventory in inventories:
+        product = inventory.product
+        worksheet.append([
+            product.name,
+            product.category,
+            _decimal_to_float(inventory.stock),
+            _decimal_to_float(product.price),
+            product.supplier,
+            _stock_status(inventory),
+        ])
+
+    _format_excel_sheet(worksheet)
+
+    output = BytesIO()
+    workbook.save(output)
+    output.seek(0)
+
+    response = HttpResponse(
+        output.getvalue(),
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = 'attachment; filename="inventory_report.xlsx"'
+
+    return response
+
+
+def export_sales_report(request):
+    workbook = Workbook()
+    worksheet = workbook.active
+    worksheet.title = "Sales Report"
+
+    headers = [
+        "Product Name",
+        "Quantity Sold",
+        "Selling Price",
+        "Revenue",
+        "Sale Date",
+    ]
+    worksheet.append(headers)
+
+    sales = Sale.objects.select_related("product").order_by("-order_date", "-id")
+
+    for sale in sales:
+        worksheet.append([
+            sale.product.name,
+            _decimal_to_float(sale.quantity),
+            _decimal_to_float(sale.product.price),
+            _decimal_to_float(sale.total_price),
+            sale.order_date.strftime("%Y-%m-%d"),
+        ])
+
+    _format_excel_sheet(worksheet)
+
+    output = BytesIO()
+    workbook.save(output)
+    output.seek(0)
+
+    response = HttpResponse(
+        output.getvalue(),
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = 'attachment; filename="sales_report.xlsx"'
+
+    return response
 
 def monthly_report(request):
     today = datetime.date.today()

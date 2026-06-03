@@ -110,6 +110,15 @@
             background: rgba(255,255,255,0.9);
         }
 
+        input[readonly]{
+
+            background: rgba(255,255,255,0.7);
+
+            color:#0f172a;
+
+            font-weight:bold;
+        }
+
         input:focus,
         select:focus{
 
@@ -197,11 +206,15 @@
 
             <label>Product Name</label>
 
-            <input type="text" value="{{ sale.product.name }} (Price: ₹{{ sale.product.price }})" disabled style="background: rgba(255,255,255,0.2); color: #cbd5e1;">
+            <input type="text" id="product_name" value="{{ sale.product.name }} (Price: Rs. {{ sale.product.price }}/kg)" data-price="{{ sale.product.price }}" disabled style="background: rgba(255,255,255,0.2); color: #cbd5e1;">
 
-            <label>Quantity</label>
+            <label>Quantity (kg)</label>
 
-            <input type="number" name="quantity" value="{{ sale.quantity }}" min="1" required>
+            <input type="number" name="quantity" id="quantity" value="{{ sale.quantity }}" min="0.01" step="0.01" required>
+
+            <label>Total Price (Rs.)</label>
+
+            <input type="text" id="total_price" readonly>
 
             <label>Payment Method</label>
 
@@ -258,6 +271,23 @@
     </div>
 
     {% include 'popups.html' %}
+
+    <script>
+        const productInput = document.getElementById('product_name');
+        const quantityInput = document.getElementById('quantity');
+        const totalPriceInput = document.getElementById('total_price');
+
+        function updateTotalPrice() {
+            const price = parseFloat(productInput.dataset.price || '0');
+            const quantity = parseFloat(quantityInput.value || '0');
+            const total = price * quantity;
+
+            totalPriceInput.value = `Rs. ${total.toFixed(2)}`;
+        }
+
+        quantityInput.addEventListener('input', updateTotalPrice);
+        updateTotalPrice();
+    </script>
 
 </body>
 

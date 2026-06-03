@@ -162,6 +162,21 @@
             transform:scale(1.05);
         }
 
+        .export-card{
+
+            border:1px solid rgba(0,191,255,0.35);
+        }
+
+        .export-card a{
+
+            background:#16a34a;
+        }
+
+        .export-card a:hover{
+
+            background:#15803d;
+        }
+
     </style>
 
 </head>
@@ -259,6 +274,38 @@
             <a href="/report/yearly/">
 
                 Open Report
+
+            </a>
+
+        </div>
+
+        <div class="report-card export-card">
+
+            <h3>Inventory Excel</h3>
+
+            <p>
+                Download product stock, category, supplier, price, and status details.
+            </p>
+
+            <a href="/report/export-inventory/">
+
+                Export Inventory Report
+
+            </a>
+
+        </div>
+
+        <div class="report-card export-card">
+
+            <h3>Sales Excel</h3>
+
+            <p>
+                Download sold quantities, selling prices, revenue, and sale dates.
+            </p>
+
+            <a href="/report/export-sales/">
+
+                Export Sales Report
 
             </a>
 

@@ -341,7 +341,7 @@
 
                 <th>Product</th>
 
-                <th>Quantity</th>
+                <th>Quantity (kg)</th>
 
                 <th>Total Amount</th>
 
@@ -363,9 +363,9 @@
 
                 <td>{{ sale.product.name }}</td>
 
-                <td>{{ sale.quantity }}</td>
+                <td>{{ sale.quantity }} kg</td>
 
-                <td>₹{{ sale.total_price }}</td>
+                <td>Rs. {{ sale.total_price }}</td>
 
                 <td class="{% if sale.payment_status|lower == 'paid' %}paid{% elif sale.payment_status|lower == 'pending' %}pending{% else %}cancelled{% endif %}">
 

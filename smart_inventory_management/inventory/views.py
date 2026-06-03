@@ -2,10 +2,22 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 
 from django.db.models import F
+from decimal import Decimal, InvalidOperation
 
 from .models import Inventory, StockHistory
 
 from products.models import Product
+
+
+def parse_decimal(value, default='0'):
+
+    try:
+
+        return Decimal(value or default)
+
+    except (InvalidOperation, TypeError):
+
+        return Decimal(default)
 
 
 # INVENTORY LIST
@@ -100,9 +112,9 @@ def add_inventory(request):
 
         product_name = request.POST.get('product_name')
 
-        quantity = int(
+        quantity = parse_decimal(
 
-            request.POST.get('quantity') or 0
+            request.POST.get('quantity')
 
         )
 
@@ -222,19 +234,20 @@ def update_inventory(request, id):
 
     if request.method == 'POST':
 
-        stock = int(
+        stock = parse_decimal(
 
-            request.POST.get('stock') or 0
+            request.POST.get('stock')
 
         )
 
-        low_stock_threshold = int(
+        low_stock_threshold = parse_decimal(
 
             request.POST.get(
 
                 'low_stock_threshold'
 
-            ) or 5
+            ),
+            '5'
 
         )
 

@@ -151,6 +151,16 @@ urlpatterns = [
         report_views.yearly_report
     ),
 
+    path(
+        'report/export-inventory/',
+        report_views.export_inventory_report
+    ),
+
+    path(
+        'report/export-sales/',
+        report_views.export_sales_report
+    ),
+
     # =========================================
     # SALES
     # =========================================

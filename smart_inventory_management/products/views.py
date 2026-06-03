@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from django.db.models import Q
+from decimal import Decimal, InvalidOperation
 
 from .models import Product
 
@@ -17,6 +18,17 @@ from inventory.models import Inventory
 
 from rest_framework import generics
 from .serializers import ProductSerializer
+
+
+def parse_decimal(value, default='0'):
+
+    try:
+
+        return Decimal(value or default)
+
+    except (InvalidOperation, TypeError):
+
+        return Decimal(default)
 
 
 # =========================================
@@ -104,9 +116,9 @@ def add_product(request):
 
         category = request.POST.get('category')
 
-        quantity = int(
+        quantity = parse_decimal(
 
-            request.POST.get('quantity') or 0
+            request.POST.get('quantity')
 
         )
 
@@ -216,9 +228,9 @@ def update_product(request, id):
 
         category = request.POST.get('category')
 
-        quantity = int(
+        quantity = parse_decimal(
 
-            request.POST.get('quantity') or 0
+            request.POST.get('quantity')
 
         )
 

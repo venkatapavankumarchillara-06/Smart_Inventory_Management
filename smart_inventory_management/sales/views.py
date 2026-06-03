@@ -1,4 +1,5 @@
 import datetime
+from decimal import Decimal, InvalidOperation
 
 from django.shortcuts import (
     render,
@@ -17,6 +18,17 @@ from inventory.models import (
     Inventory,
     StockHistory
 )
+
+
+def parse_decimal(value, default='0'):
+
+    try:
+
+        return Decimal(value or default)
+
+    except (InvalidOperation, TypeError):
+
+        return Decimal(default)
 
 
 # =========================================
@@ -185,8 +197,8 @@ def add_sale(request):
             'product_id'
         )
 
-        quantity = int(
-            request.POST.get('quantity') or 0
+        quantity = parse_decimal(
+            request.POST.get('quantity')
         )
 
         payment_method = request.POST.get(
@@ -246,7 +258,7 @@ def add_sale(request):
 
                 error = (
 
-                    f"Only {inventory.stock} units "
+                    f"Only {inventory.stock} kg "
                     f"available for {product.name}"
 
                 )
@@ -369,8 +381,8 @@ def update_sale(request, id):
             'customer_name'
         )
 
-        quantity = int(
-            request.POST.get('quantity') or 0
+        quantity = parse_decimal(
+            request.POST.get('quantity')
         )
 
         payment_method = request.POST.get(
@@ -408,8 +420,8 @@ def update_sale(request, id):
 
             error = (
 
-                f"Only {inventory.stock} extra "
-                f"units available"
+                f"Only {inventory.stock} extra kg "
+                f"available"
 
             )
             messages.error(request, error)

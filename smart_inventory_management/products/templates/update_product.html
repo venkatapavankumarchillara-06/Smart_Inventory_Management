@@ -20,7 +20,7 @@
 
         body{
 
-            height: 100vh;
+            min-height: 100vh;
 
             display: flex;
 
@@ -32,11 +32,13 @@
 
             font-family: Arial, sans-serif;
 
-            overflow: hidden;
+            overflow-y: auto;
 
             position: relative;
 
             color: white;
+
+            padding: 32px 16px;
         }
 
         /* Floating Animation */
@@ -222,18 +224,22 @@
                    value="{{ product.category }}"
                    required>
 
-            <label>Quantity</label>
+            <label>Quantity (kg)</label>
 
             <input type="number"
                    name="quantity"
                    value="{{ product.quantity }}"
+                   step="0.01"
+                   min="0"
                    required>
 
-            <label>Price</label>
+            <label>Unit Price per kg (Rs.)</label>
 
             <input type="number"
                    name="price"
                    value="{{ product.price }}"
+                   step="0.01"
+                   min="0.01"
                    required>
 
             <label>Supplier</label>

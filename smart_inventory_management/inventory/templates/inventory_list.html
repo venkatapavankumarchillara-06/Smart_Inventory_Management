@@ -413,7 +413,7 @@
 
             <h2>Total Inventory Value</h2>
 
-            <p>₹{{ total_inventory_value }}</p>
+            <p>Rs. {{ total_inventory_value }}</p>
 
         </div>
 
@@ -478,9 +478,9 @@
 
             <th>Product</th>
 
-            <th>Current Stock</th>
+            <th>Current Stock (kg)</th>
 
-            <th>Unit Price</th>
+            <th>Price per kg</th>
 
             <th>Status</th>
 
@@ -496,9 +496,9 @@
 
             <td>{{ inventory.product.name }}</td>
 
-            <td>{{ inventory.stock }}</td>
+            <td>{{ inventory.stock }} kg</td>
 
-            <td>₹{{ inventory.product.price }}</td>
+            <td>Rs. {{ inventory.product.price }}</td>
 
             <td>
 

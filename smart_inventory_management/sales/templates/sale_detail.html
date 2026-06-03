@@ -341,7 +341,7 @@
 
                 <h3>Total Amount</h3>
 
-                <p>₹{{ sale.total_price }}</p>
+                <p>Rs. {{ sale.total_price }}</p>
 
             </div>
 
@@ -365,7 +365,7 @@
 
                     <th>Product</th>
 
-                    <th>Quantity</th>
+                    <th>Quantity (kg)</th>
 
                     <th>Price</th>
 
@@ -377,11 +377,11 @@
 
                     <td>{{ sale.product.name }}</td>
 
-                    <td>{{ sale.quantity }}</td>
+                    <td>{{ sale.quantity }} kg</td>
 
-                    <td>₹{{ sale.product.price }}</td>
+                    <td>Rs. {{ sale.product.price }}</td>
 
-                    <td>₹{{ sale.total_price }}</td>
+                    <td>Rs. {{ sale.total_price }}</td>
 
                 </tr>
 
